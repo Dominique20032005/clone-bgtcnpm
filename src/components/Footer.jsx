@@ -1,12 +1,25 @@
-import { Grid, GridItem, Box, Text, Link, Switch } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Link,
+  Switch,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { Link as RouterLink } from "@tanstack/react-router";
 
 export const Footer = () => {
+  // eslint-disable-next-line no-unused-vars
+  const { _, toggleColorMode } = useColorMode();
+  const bg = useColorModeValue("whiteAlpha.900", "gray.900");
   return (
     <Grid
       h="150px"
       templateRows="1fr"
       templateColumns="repeat(6, 1fr)"
-      bg="gray.900"
+      bg={bg}
       p={6}
       color="gray.300"
       gap={4}
@@ -34,13 +47,31 @@ export const Footer = () => {
         </Text>
         <Box>
           <Box>
-            <Link href="#" color="gray.400" display="block" mb={1}>
+            <Link
+              as={RouterLink}
+              to="/"
+              color="gray.400"
+              display="block"
+              mb={1}
+            >
               Home
             </Link>
-            <Link href="#" color="gray.400" display="block" mb={1}>
+            <Link
+              as={RouterLink}
+              to="/about"
+              color="gray.400"
+              display="block"
+              mb={1}
+            >
               About
             </Link>
-            <Link href="#" color="gray.400" display="block" mb={1}>
+            <Link
+              as={RouterLink}
+              to="/post"
+              color="gray.400"
+              display="block"
+              mb={1}
+            >
               Post
             </Link>
           </Box>
@@ -72,7 +103,7 @@ export const Footer = () => {
         <Text fontSize="lg" fontWeight="bold" mb={2}>
           Tuỳ chỉnh
         </Text>
-        <Switch colorScheme="teal" size="lg" />
+        <Switch colorScheme="teal" size="lg" onChange={toggleColorMode} />
       </GridItem>
     </Grid>
   );

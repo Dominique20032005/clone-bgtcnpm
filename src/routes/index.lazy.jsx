@@ -1,14 +1,6 @@
-import { Box } from "@chakra-ui/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { Home } from "../pages/Home";
 
 export const Route = createLazyFileRoute("/")({
-  component: Index,
+  component: Home,
 });
-
-function Index() {
-  return (
-    <Box>
-      <h3>Welcome Home!</h3>
-    </Box>
-  );
-}

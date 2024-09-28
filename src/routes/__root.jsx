@@ -1,10 +1,9 @@
 import { Box, Flex, Link, Spacer } from "@chakra-ui/react";
 import {
-    createRootRoute,
-    Outlet,
-    Link as RouterLink
+  createRootRoute,
+  Outlet,
+  Link as RouterLink,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { PiAirplayDuotone } from "react-icons/pi";
 import { useLocalStorage } from "react-use";
 import { Footer } from "../components/Footer";
@@ -34,7 +33,6 @@ const Navigator = () => {
                 boxShadow: "dark-lg",
                 p: 6,
                 rounded: "md",
-                bg: "white",
               }}
               px={4}
             >
@@ -104,13 +102,10 @@ const Navigator = () => {
         </Box>
       </Flex>
 
-      <hr />
-      <Box h="calc(100vh)">
+      <Box minH="calc(70vh)">
         <Outlet />
       </Box>
       <Footer />
-
-      <TanStackRouterDevtools />
     </>
   );
 };

@@ -1,13 +1,13 @@
-import { Box, Flex, Link, Spacer } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Link, Spacer } from "@chakra-ui/react";
 import {
   createRootRoute,
   Outlet,
   Link as RouterLink,
 } from "@tanstack/react-router";
 import { PiAirplayDuotone } from "react-icons/pi";
-import { useLocalStorage } from "react-use";
+import { Avatar as MyAvatar } from "../components/Avatar";
 import { Footer } from "../components/Footer";
-
+import { useAuthStorage } from "../hooks/useAuthStorage";
 const routes = [
   { path: "/", name: "Home" },
   { path: "/about", name: "About" },
@@ -15,7 +15,7 @@ const routes = [
 ];
 
 const Navigator = () => {
-  const [value, setAccessToken] = useLocalStorage("accessToken");
+  const { setAccessToken, isLoggedIn, decode } = useAuthStorage();
   return (
     <>
       <Flex>
@@ -42,7 +42,7 @@ const Navigator = () => {
         </Box>
 
         <Spacer />
-        {value == null && (
+        {!isLoggedIn() && (
           <>
             <Box p="4">
               <Link
@@ -78,11 +78,11 @@ const Navigator = () => {
           </>
         )}
 
-        {value != null && (
+        {isLoggedIn() && (
           <Box p="4">
             <Link
               as={RouterLink}
-              to="/log-out"
+              to="/log-in"
               _activeLink={{
                 boxShadow: "dark-lg",
                 p: 6,
@@ -97,9 +97,18 @@ const Navigator = () => {
           </Box>
         )}
 
-        <Box p="4" bg="green.400">
-          Box 2
-        </Box>
+        {!isLoggedIn() && <Avatar src="https://bit.ly/broken-link" />}
+        {isLoggedIn() && (
+          <Box width="55px" height="55px">
+            <MyAvatar
+              showTooltip={false}
+              borderRadius={10}
+              shouldHover={false}
+              shouldTap={false}
+              name={decode().avatar}
+            />
+          </Box>
+        )}
       </Flex>
 
       <Box minH="calc(70vh)">

@@ -4,11 +4,14 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Input,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
-
+import { faker } from "@faker-js/faker";
+import { useMemo, useState } from "react";
+import { FaRandom } from "react-icons/fa";
+import { Avatar } from "../components/Avatar";
 export function SignUp() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,6 +19,18 @@ export function SignUp() {
   const [avatar, setAvatar] = useState("");
   const [error, setError] = useState("");
   const toast = useToast("");
+  const [randomClick, setRandomClick] = useState(null);
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(null);
+
+  const avatarSeeds = useMemo(
+    () =>
+      Array(5)
+        .fill(null)
+        .map(() => {
+          return faker.person.fullName();
+        }),
+    [randomClick]
+  );
 
   const onSignUpBtnClick = async () => {
     const response = await fetch(
@@ -23,7 +38,12 @@ export function SignUp() {
       {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ userName, password, email, avatar }),
+        body: JSON.stringify({
+          userName,
+          password,
+          email,
+          avatar: avatarSeeds[selectedAvatarIndex],
+        }),
       }
     );
 
@@ -75,10 +95,36 @@ export function SignUp() {
         <FormControl isRequired>
           <FormLabel>Avatar</FormLabel>
           <Input
-            placeholder="Avatar"
+            placeholder="Select the avatar below!"
             onChange={(e) => setAvatar(e.target.value)}
-            value={avatar}
+            value={avatarSeeds[selectedAvatarIndex]}
+            disabled
           />
+
+          <Button
+            mt={5}
+            leftIcon={<FaRandom />}
+            colorScheme="teal"
+            variant="solid"
+            onClick={setRandomClick}
+          >
+            Random
+          </Button>
+
+          <HStack mt={5} spacing={3}>
+            {avatarSeeds.map((avatar, index) => {
+              return (
+                <Avatar
+                  key={index}
+                  name={avatar}
+                  selected={index === selectedAvatarIndex}
+                  onClick={() => {
+                    setSelectedAvatarIndex(index);
+                  }}
+                />
+              );
+            })}
+          </HStack>
         </FormControl>
       </Box>
 
@@ -89,6 +135,7 @@ export function SignUp() {
         border="2px"
         borderColor="green.500"
         mt={5}
+        mb={6}
         onClick={() => {
           toast.promise(onSignUpBtnClick(), {
             success: { title: "Promise resolved", description: "Looks great" },

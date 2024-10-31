@@ -1,4 +1,3 @@
-// before
 import { Box, Flex, IconButton, Image } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
@@ -15,7 +14,6 @@ const WUKONG_IMGS = Array(4)
 
 export const ImgSlider = () => {
   const [currentImg, setCurrentImg] = useState(0);
-  console.log(currentImg);
 
   const handleLeftClick = () => {
     setCurrentImg((prev) => {
@@ -40,6 +38,8 @@ export const ImgSlider = () => {
       {rotateArr(WUKONG_IMGS, currentImg).map((img, index) => {
         const zIndexReverse = WUKONG_IMGS.length - index;
         const isFirstImage = index === 0;
+        const isLastThree = index > WUKONG_IMGS.length - 4; // Check if it's one of the last 3 images
+
         return (
           <Image
             key={index}
@@ -53,15 +53,15 @@ export const ImgSlider = () => {
             objectFit="cover"
             width="70%"
             height="265px"
-            {...{ blur: index === 0 ? undefined : "2px" }}
+            filter={isFirstImage ? "none" : "blur(2px)"}
             _hover={{
               transform: isFirstImage
                 ? `rotate(0deg)`
-                : `rotate(${index * 8}deg) scale(1.05)`,
+                : `rotate(${index * 8}deg) scale(1.1)`,
+              filter: isLastThree ? "none" : undefined, // Remove blur on hover for the last 3 images
             }}
             zIndex={zIndexReverse}
-            filter={isFirstImage ? "none" : "blur(2px)"}
-            transition="all 0.1s ease"
+            transition="all 0.2s ease"
           />
         );
       })}

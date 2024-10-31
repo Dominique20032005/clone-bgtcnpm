@@ -1,30 +1,23 @@
 import {
-    Box,
-    Button,
-    FormControl,
-    FormLabel,
-    Heading,
-    Input,
-    useToast,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useLocalStorage } from "react-use";
+import { useAuthStorage } from "../hooks/useAuthStorage";
 
 export function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toast = useToast("");
-  // eslint-disable-next-line no-unused-vars
-  const [_, setValue] = useLocalStorage("accessToken", "");
+  const { setAccessToken } = useAuthStorage();
 
   const navigate = useNavigate();
-
-  const handleNavigation = () => {
-    navigate({
-      to: "/",
-    });
-  };
 
   const onLogInBtnClick = async () => {
     const response = await fetch(
@@ -36,11 +29,19 @@ export function LogIn() {
       }
     );
 
+    if (!response.ok) {
+      throw new Error("not yet authenticate!");
+    }
+
     const data = await response.json();
-
-    setValue(data.token);
-
-    handleNavigation();
+    try {
+      setAccessToken(data.token);
+      navigate({
+        to: "/",
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     console.log("data", data);
   };
